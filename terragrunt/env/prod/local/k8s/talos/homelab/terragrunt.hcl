@@ -13,13 +13,13 @@ inputs = {
     controlplanes = {
       "talos1.adm.ptre.es" = {
         install_disk = "/dev/vda"
-        hostname     = "controlplane1"
+        hostname     = "talos1.adm.ptre.es"
       }
     },
     workers = {
       "talos2.adm.ptre.es" = {
         install_disk = "/dev/vda"
-        hostname     = "worker1"
+        hostname     = "talos2.adm.ptre.es"
       }
     }
   }

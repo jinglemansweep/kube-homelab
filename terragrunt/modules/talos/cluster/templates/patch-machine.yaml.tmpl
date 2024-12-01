@@ -4,6 +4,3 @@ machine:
     image: ${install_image}
   network:
     hostname: ${hostname}
-  kubelet:
-    kubeProxy:
-      mode: ipvs # Required for MetalLB ARP

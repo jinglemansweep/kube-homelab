@@ -14,7 +14,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "peachtrees"
     workspaces {
-      name = "${local.terraform_cloud_workspace_prefix}-${local.environment.locals.env_slug}-${local.region.locals.region_slug}"
+      name = "${local.terraform_cloud_workspace_prefix}-${replace(path_relative_to_include("root.hcl"), "/", "-")}"
     }
   }
   required_providers {
