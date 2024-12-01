@@ -1,0 +1,3 @@
+cluster:
+  # Allow scheduling on control planes
+  allowSchedulingOnControlPlanes: true

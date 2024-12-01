@@ -1,5 +1,10 @@
+# Secrets / Env
+**/.env
+**/secrets.sh
+
 # Local .terraform directories
 **/.terraform/*
+**/.terragrunt-cache/*
 
 # .tfstate files
 *.tfstate
