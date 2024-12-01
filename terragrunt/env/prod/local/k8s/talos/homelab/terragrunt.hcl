@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/terragrunt/modules//talos/cluster"
+  source = "${get_repo_root()}/terragrunt/modules//k8s/talos/cluster"
 }
 
 inputs = {
