@@ -24,13 +24,20 @@ provider "helm" {
   }
 }
 
+resource "kubernetes_namespace" "this" {
+  metadata {
+    name = "external-secrets"
+  }
+}
 
-resource "helm_release" "external-secrets" {
+resource "helm_release" "this" {
   name        = "external-secrets"
   namespace   = "external-secrets"
-  create_namespace = true
   repository  = "https://charts.external-secrets.io"
   chart       = "external-secrets"
+  depends_on = [
+    kubernetes_namespace.this
+  ]
 }
 
 resource "kubernetes_secret" "credentials" {
@@ -43,9 +50,15 @@ resource "kubernetes_secret" "credentials" {
     clientSecret = data.infisical_secrets.secrets.secrets["EXTERNALSECRETS_INFISICAL_CLIENT_SECRET"].value
   }
   type = "generic"
+  depends_on = [
+    kubernetes_namespace.this
+  ]
 }
 
 resource "kubernetes_manifest" "secretstore" {
-  depends_on = [helm_release.external-secrets]
   manifest = yamldecode(file("./secretstore.yaml"))
+  depends_on = [
+    helm_release.this,
+    kubernetes_secret.credentials
+  ]
 }

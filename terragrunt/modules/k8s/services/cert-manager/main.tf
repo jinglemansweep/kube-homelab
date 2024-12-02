@@ -25,19 +25,27 @@ provider "helm" {
 }
 
 
-resource "helm_release" "cert-manager" {
+resource "kubernetes_namespace" "this" {
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "helm_release" "this" {
   name        = "cert-manager"
   namespace   = "cert-manager"
-  create_namespace = true
   repository  = "https://charts.jetstack.io"
   chart       = "cert-manager"
   set {
     name  = "crds.enabled"
     value = true
   }
+  depends_on = [
+    kubernetes_namespace.this
+  ]
 }
 
-resource "kubernetes_manifest" "infisical-cloudflare-api-token" {
+resource "kubernetes_manifest" "infisical_cloudflare_api_token" {
   manifest = {
     apiVersion = "external-secrets.io/v1beta1"
     kind       = "ExternalSecret"
@@ -64,7 +72,7 @@ resource "kubernetes_manifest" "infisical-cloudflare-api-token" {
     }
   }
   depends_on = [ 
-    helm_release.cert-manager
+    kubernetes_namespace.this
   ]
 }
 
@@ -76,7 +84,7 @@ locals {
   ]
 }
 
-resource "kubernetes_manifest" "issuers-letsencrypt" {
+resource "kubectl_manifest" "issuers-letsencrypt" {
   for_each = { for issuer in local.issuers : issuer.name => issuer }
   manifest = {
     apiVersion = "cert-manager.io/v1"
@@ -107,6 +115,6 @@ resource "kubernetes_manifest" "issuers-letsencrypt" {
     }
   }
   depends_on = [
-    kubernetes_manifest.infisical-cloudflare-api-token
+    helm_release.this
   ]
 }
