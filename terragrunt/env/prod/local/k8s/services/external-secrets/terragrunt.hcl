@@ -7,7 +7,7 @@ dependency "talos_homelab" {
 }
 
 terraform {
-  source = "${get_repo_root()}/terragrunt/modules//k8s/services/external-secrets/infisical"
+  source = "${get_repo_root()}/terragrunt/modules//k8s/services/external-secrets"
 }
 
 inputs = {

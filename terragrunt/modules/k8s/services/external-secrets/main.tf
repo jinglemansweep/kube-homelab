@@ -3,9 +3,11 @@ terraform {
 }
 
 locals {
+  namespace = "external-secrets"
   ca_certificate     = base64decode(var.kubeconfig.ca_certificate)
   client_certificate = base64decode(var.kubeconfig.client_certificate)
   client_key         = base64decode(var.kubeconfig.client_key)
+  
 }
 
 provider "kubernetes" {
@@ -26,13 +28,13 @@ provider "helm" {
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = "external-secrets"
+    name = local.namespace
   }
 }
 
 resource "helm_release" "this" {
   name        = "external-secrets"
-  namespace   = "external-secrets"
+  namespace   = local.namespace
   repository  = "https://charts.external-secrets.io"
   chart       = "external-secrets"
   depends_on = [
@@ -40,25 +42,4 @@ resource "helm_release" "this" {
   ]
 }
 
-resource "kubernetes_secret" "credentials" {
-  metadata {
-    name = "infisical-credentials"
-    namespace = "external-secrets"
-  }
-  data = {
-    clientId = data.infisical_secrets.secrets.secrets["EXTERNALSECRETS_INFISICAL_CLIENT_ID"].value
-    clientSecret = data.infisical_secrets.secrets.secrets["EXTERNALSECRETS_INFISICAL_CLIENT_SECRET"].value
-  }
-  type = "generic"
-  depends_on = [
-    kubernetes_namespace.this
-  ]
-}
 
-resource "kubernetes_manifest" "secretstore" {
-  manifest = yamldecode(file("./secretstore.yaml"))
-  depends_on = [
-    helm_release.this,
-    kubernetes_secret.credentials
-  ]
-}
