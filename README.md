@@ -12,6 +12,7 @@ The following secrets are required in the provisioning secrets manager:
 | `EXTERNALSECRETS_INFISICAL_CLIENT_SECRET`    | Infisical Client Secret for External-Secrets      |
 | `EXTERNALSECRETS_INFISICAL_ENVIRONMENT_SLUG` | Infisical Environment Slug for External-Secrets   |
 | `EXTERNALSECRETS_INFISICAL_PROJECT_SLUG`     | Infisical Project Slug for External-Secrets       |
+| `METALLB_IPADDRESSPOOL_DEFAULT`              | MetalLB IP Address Pool Range                     |
 
 ## Quickstart
 
@@ -55,6 +56,12 @@ Provision External DNS:
 
     # Install `external-dns`
     cd envs/prod/local/k8s/services/external-dns
+    terragrunt apply
+
+Provision MetalLB:
+
+    # Install 'metallb'
+    cd envs/prod/local/k8s/services/metallb
     terragrunt apply
 
 ### Testing
