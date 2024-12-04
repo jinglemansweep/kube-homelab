@@ -64,6 +64,10 @@ Provision MetalLB:
     cd envs/prod/local/k8s/services/metallb
     terragrunt apply
 
+    # Install IP Address Pool and L2 Advertisements
+    cd envs/prods/local/k8s/providers/metallb/home
+    terragrunt apply
+
 ### Testing
 
 To test `external-secrets`:
